@@ -1,7 +1,6 @@
 const listInput = document.querySelector("#input-todo");
 const addBtn = document.querySelector("#add-todo");
 const list = document.querySelector(".notTodo-list");
-const deleteBtn = document.querySelector(".delete-btn");
 const listDescription = document.querySelector(".notTodo-card__description");
 
 let cards = [];
@@ -78,7 +77,6 @@ function handleDeleteBtnClick() {
 }
 
 addBtn.addEventListener("click", handleAddBtnClick);
-deleteBtn.addEventListener("click", handleDeleteBtnClick);
 
 const savedToDos = localStorage.getItem("todos");
 
