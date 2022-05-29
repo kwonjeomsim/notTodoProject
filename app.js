@@ -6,12 +6,12 @@ const listDescription = document.querySelector(".notTodo-card__description");
 let cards = [];
 
 class Card {
-    constructor(title, id) {
-        this.title = title;
-        this.id = id;
+    constructor(cardObj) {
+        this.cardObj = cardObj;
     }
     firstColumn = document.createElement("div");
     lastColumn = document.createElement("div");
+    title = document.createElement("div");
     description = document.createElement("input");
     delBtn = document.createElement("button");
     icon = document.createElement("i");
@@ -24,18 +24,19 @@ class Card {
 
         card.appendChild(firstColumn);
         card.appendChild(lastColumn);
+        card.id = this.cardObj.id;
         return card;
     }
 
     createContent() {
         this.firstColumn.classList.add("notTodo-card__column");
-        const title = document.createElement("div");
-        title.innerText = this.title;
-        title.classList.add("notTodo-card__title");
+        this.title.innerText = this.cardObj.text;
+        this.title.classList.add("notTodo-card__title");
         this.description.classList.add("notTodo-card__description");
         this.description.placeholder = "add description!";
+        this.description.value = this.cardObj.description;
 
-        this.firstColumn.appendChild(title);
+        this.firstColumn.appendChild(this.title);
         this.firstColumn.appendChild(this.description);
         return this.firstColumn;
     }
@@ -54,34 +55,54 @@ class Card {
 }
 
 function saveToDos() {
-    localStorage.setItem("todos", JSON.stringify(cards));
+    localStorage.setItem("notTodos", JSON.stringify(cards));
   }
 
-function paintToDos() {
-    const card = new Card(listInput.value, Date.now()).createCard();
-    return card
+function paintToDos(cardObj) {
+    const card = new Card(cardObj);
+    card.delBtn.addEventListener("click", handleDeleteBtnClick);
+    card.description.addEventListener("change", handleDescriptionChange);
+    list.appendChild(card.createCard());
+}
+
+function handleDescriptionChange(event) {
+    const cardList = event.target.parentElement.parentElement;
+    cards.forEach(card => {
+        if (card.id === parseInt(cardList.id)) {
+            card.description = event.target.value;
+        }
+    })
+
+    saveToDos();
 }
 
 function handleAddBtnClick(event) {
-    console.log(cards);
     event.preventDefault();
-    const card = paintToDos();
-    cards.push(card);
-    list.appendChild(card);
+    const newCardObj = {
+        text: listInput.value,
+        id: Date.now(),
+        description: ""
+    }
+    cards.push(newCardObj);
+    paintToDos(newCardObj);
     listInput.value = "";
     saveToDos();
 }
 
-function handleDeleteBtnClick() {
-    cards.pop()
+function handleDeleteBtnClick(event) {
+    const cardList = event.target.parentElement.parentElement.parentElement;
+    cardList.remove();
+    cards = cards.filter(card => card.id !== parseInt(cardList.id));
+    saveToDos();
 }
 
 addBtn.addEventListener("click", handleAddBtnClick);
 
-const savedToDos = localStorage.getItem("todos");
+const savedToDos = localStorage.getItem("notTodos");
 
 if(savedToDos) {
     const parsedToDos = JSON.parse(savedToDos);
     cards = parsedToDos;
+    console.log(cards);
     parsedToDos.forEach(paintToDos);
   }
