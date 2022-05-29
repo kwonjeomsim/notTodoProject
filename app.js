@@ -19,7 +19,6 @@ function createListStructure(title) {
     containerColumn.appendChild(descriptionInput);
     container.appendChild(containerColumn);
     container.appendChild(delBtn);
-    cards.push(container);
     list.appendChild(container);
 }
 
