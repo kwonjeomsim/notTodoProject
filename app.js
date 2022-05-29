@@ -1,40 +1,89 @@
 const listInput = document.querySelector("#input-todo");
 const addBtn = document.querySelector("#add-todo");
 const list = document.querySelector(".notTodo-list");
-const cards = document.querySelectorAll(".notTodo-card");
-const deleteBtn = document.querySelector(".notTodo-card__column:last-child");
+const deleteBtn = document.querySelector(".delete-btn");
 const listDescription = document.querySelector(".notTodo-card__description");
 
-function createListStructure(title) {
-    const container = document.createElement("div");
-    const containerColumn = document.createElement("div");
-    const containerTitle = document.createElement("div");
-    const delBtn = deleteBtn.cloneNode(true);
-    const descriptionInput = listDescription.cloneNode(true);
-    containerTitle.innerText = title;
-    container.classList.add("notTodo-card");
-    containerColumn.classList.add("notTodo-card__column");
-    containerTitle.classList.add("notTodo-card__title");
-    containerColumn.appendChild(containerTitle);
-    containerColumn.appendChild(descriptionInput);
-    container.appendChild(containerColumn);
-    container.appendChild(delBtn);
-    list.appendChild(container);
+let cards = [];
+
+class Card {
+    constructor(title, id) {
+        this.title = title;
+        this.id = id;
+    }
+    firstColumn = document.createElement("div");
+    lastColumn = document.createElement("div");
+    description = document.createElement("input");
+    delBtn = document.createElement("button");
+    icon = document.createElement("i");
+
+    createCard() {
+        const card = document.createElement("div");
+        card.classList.add("notTodo-card");
+        const firstColumn = this.createContent();
+        const lastColumn = this.createDelBtn();
+
+        card.appendChild(firstColumn);
+        card.appendChild(lastColumn);
+        return card;
+    }
+
+    createContent() {
+        this.firstColumn.classList.add("notTodo-card__column");
+        const title = document.createElement("div");
+        title.innerText = this.title;
+        title.classList.add("notTodo-card__title");
+        this.description.classList.add("notTodo-card__description");
+        this.description.placeholder = "add description!";
+
+        this.firstColumn.appendChild(title);
+        this.firstColumn.appendChild(this.description);
+        return this.firstColumn;
+    }
+
+    createDelBtn() {
+        this.lastColumn.classList.add("notTodo-card__column");
+        this.delBtn.classList.add("delete-btn");
+        this.icon.classList.add("far");
+        this.icon.classList.add("fa-window-close");
+        this.icon.classList.add("fa-lg");
+
+        this.delBtn.appendChild(this.icon);
+        this.lastColumn.appendChild(this.delBtn);
+        return this.lastColumn;
+    }
 }
 
-function createList(title) {
-    createListStructure(title);
+function saveToDos() {
+    localStorage.setItem("todos", JSON.stringify(cards));
+  }
+
+function paintToDos() {
+    const card = new Card(listInput.value, Date.now()).createCard();
+    return card
 }
 
 function handleAddBtnClick(event) {
+    console.log(cards);
     event.preventDefault();
-    createList(listInput.value);
+    const card = paintToDos();
+    cards.push(card);
+    list.appendChild(card);
     listInput.value = "";
+    saveToDos();
 }
 
 function handleDeleteBtnClick() {
-    console.log(cards);
+    cards.pop()
 }
 
 addBtn.addEventListener("click", handleAddBtnClick);
 deleteBtn.addEventListener("click", handleDeleteBtnClick);
+
+const savedToDos = localStorage.getItem("todos");
+
+if(savedToDos) {
+    const parsedToDos = JSON.parse(savedToDos);
+    cards = parsedToDos;
+    parsedToDos.forEach(paintToDos);
+  }
