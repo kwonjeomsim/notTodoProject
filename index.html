@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notTodoList</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main">
+        <div class="title">Not To Do List</div>
+        <div class="main__column">
+            <form class="notTodo-form">
+                <input id="input-todo" required type="text" />
+                <input id="add-todo" type="submit" value="push!" />
+            </form>
+            <ul class="notTodo-list">
+                <div class="notTodo-card">
+                    <div class="notTodo-card__column">
+                        <div class="notTodo-card__title">get up late</div>
+                        <input class="notTodo-card__description" type="text" placeholder="add description!" maxlength="30" />
+                    </div>
+                    <div class="notTodo-card__column">
+                        <button class="delete-btn">
+                            <i class="far fa-window-close fa-lg"></i>
+                        </button>
+                    </div>
+            </ul>
+        </div>
+    </div>
+    <script src="https://kit.fontawesome.com/6478f529f2.js" crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+</body>
+</html>
