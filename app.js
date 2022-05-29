@@ -94,13 +94,23 @@ function deleteElement(card) {
     card.remove();
 }
 
+
 function handleDeleteBtnClick(event) {
-    const cardList = event.target.parentElement.parentElement.parentElement;
-    cardList.classList.add("disappear");
+    const card = event.target.parentElement.parentElement.parentElement;
+    const cardList = document.querySelectorAll(".notTodo-card");
+    console.log(cardList);
+    card.classList.add("disappear");
+    cardList.forEach(card => {
+        if(card.className !== "disappear")
+        card.classList.add("moving-up");
+    })
     setTimeout(() => {
-        deleteElement(cardList);
+        deleteElement(card);
+        cardList.forEach(card => {
+            card.classList.remove("moving-up");
+        })
     }, 800);
-    cards = cards.filter(card => card.id !== parseInt(cardList.id));
+    cards = cards.filter(eachCard => eachCard.id !== parseInt(card.id));
     saveToDos();
 }
 
@@ -111,6 +121,5 @@ const savedToDos = localStorage.getItem("notTodos");
 if(savedToDos) {
     const parsedToDos = JSON.parse(savedToDos);
     cards = parsedToDos;
-    console.log(cards);
     parsedToDos.forEach(paintToDos);
   }

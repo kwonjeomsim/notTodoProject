@@ -106,6 +106,19 @@ body {
     }
 }
 
+@keyframes moving-animation {
+    from {
+        transform: none;
+    }
+    to {
+        transform: translateY(150px);
+    }
+}
+
+.moving-up {
+    animation: moving-animation 0.8s ease-in-out;
+}
+
 .notTodo-card {
     width: 100%;
     min-height: 150px;
