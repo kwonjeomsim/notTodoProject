@@ -9,6 +9,7 @@ class Card {
     constructor(cardObj) {
         this.cardObj = cardObj;
     }
+    card = document.createElement("div");
     firstColumn = document.createElement("div");
     lastColumn = document.createElement("div");
     title = document.createElement("div");
@@ -17,15 +18,15 @@ class Card {
     icon = document.createElement("i");
 
     createCard() {
-        const card = document.createElement("div");
-        card.classList.add("notTodo-card");
+        this.card = document.createElement("div");
+        this.card.classList.add("notTodo-card");
         const firstColumn = this.createContent();
         const lastColumn = this.createDelBtn();
 
-        card.appendChild(firstColumn);
-        card.appendChild(lastColumn);
-        card.id = this.cardObj.id;
-        return card;
+        this.card.appendChild(firstColumn);
+        this.card.appendChild(lastColumn);
+        this.card.id = this.cardObj.id;
+        return this.card;
     }
 
     createContent() {
@@ -89,9 +90,16 @@ function handleAddBtnClick(event) {
     saveToDos();
 }
 
+function deleteElement(card) {
+    card.remove();
+}
+
 function handleDeleteBtnClick(event) {
     const cardList = event.target.parentElement.parentElement.parentElement;
-    cardList.remove();
+    cardList.classList.add("disappear");
+    setTimeout(() => {
+        deleteElement(cardList);
+    }, 800);
     cards = cards.filter(card => card.id !== parseInt(cardList.id));
     saveToDos();
 }
